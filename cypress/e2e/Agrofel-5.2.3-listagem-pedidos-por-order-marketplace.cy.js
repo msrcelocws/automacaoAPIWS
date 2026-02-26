@@ -67,7 +67,7 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
 
         // ── Registro de Ambiente no Allure ──────────────────
         const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-        cy.allure().writeEnvironmentData({
+        cy.allure().writeEnvironmentInfo({
             'Data/Hora (Brasília)': now,
             'Ambiente': BASE_URL,
             'ID da Execução': Cypress.env('GITHUB_RUN_ID') || 'Local',
