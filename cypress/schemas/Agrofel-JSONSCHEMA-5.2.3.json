@@ -1,0 +1,943 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": [
+            "attendant",
+            "orderId",
+            "id",
+            "status",
+            "approvalWorkflow",
+            "workflowIsApproved",
+            "subTotal",
+            "subTotalFormats",
+            "taxes",
+            "freightTotal",
+            "freightTotalFormats",
+            "total",
+            "totalFormats",
+            "dateCreated",
+            "lastUpdated",
+            "order",
+            "seller",
+            "customer",
+            "payments",
+            "discounts",
+            "paymentDateVpvf",
+            "deliveries",
+            "partnerOrderAttributes",
+            "orderStatusLogs",
+            "totalMarginAfterDiscountPercentage",
+            "markup",
+            "whoCreatedPreOrder",
+            "whoSelectedPayment"
+        ],
+        "properties": {
+            "attendant": {
+                "type": "object",
+                "required": [
+                    "accountId",
+                    "currentAttendanceAccountId",
+                    "attendantDocument",
+                    "attendantEmail",
+                    "attendantAttributes",
+                    "attendantType"
+                ],
+                "properties": {
+                    "accountId": {
+                        "type": "integer"
+                    },
+                    "currentAttendanceAccountId": {
+                        "type": "integer"
+                    },
+                    "attendantDocument": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "attendantEmail": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "attendantAttributes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "name",
+                                "value"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "value": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "attendantType": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "orderId": {
+                "type": "integer"
+            },
+            "id": {
+                "type": "integer"
+            },
+            "status": {
+                "type": "string",
+                "minLength": 1
+            },
+            "approvalWorkflow": {
+                "type": "boolean"
+            },
+            "workflowIsApproved": {
+                "type": "boolean"
+            },
+            "subTotal": {
+                "type": "number"
+            },
+            "subTotalFormats": {
+                "type": "object",
+                "required": [
+                    "value",
+                    "mask"
+                ],
+                "properties": {
+                    "value": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "mask": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "taxes": {
+                "type": "object",
+                "required": [
+                    "st",
+                    "ipi",
+                    "icms",
+                    "pis",
+                    "cofins",
+                    "totalTax"
+                ],
+                "properties": {
+                    "st": {
+                        "type": "number"
+                    },
+                    "ipi": {
+                        "type": "number"
+                    },
+                    "icms": {
+                        "type": "number"
+                    },
+                    "pis": {
+                        "type": "number"
+                    },
+                    "cofins": {
+                        "type": "number"
+                    },
+                    "totalTax": {
+                        "type": "number"
+                    }
+                }
+            },
+            "freightTotal": {
+                "type": "number"
+            },
+            "freightTotalFormats": {
+                "type": "object",
+                "required": [
+                    "value",
+                    "mask"
+                ],
+                "properties": {
+                    "value": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "mask": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "total": {
+                "type": "number"
+            },
+            "totalFormats": {
+                "type": "object",
+                "required": [
+                    "value",
+                    "mask"
+                ],
+                "properties": {
+                    "value": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "mask": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "dateCreated": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "lastUpdated": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "order": {
+                "type": "object",
+                "required": [
+                    "origin",
+                    "originStoreName",
+                    "originStoreId",
+                    "originStoreSubdomain",
+                    "originStorePartnerId",
+                    "drivenPrice"
+                ],
+                "properties": {
+                    "origin": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "originStoreName": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "originStoreId": {
+                        "type": "integer"
+                    },
+                    "originStoreSubdomain": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "originStorePartnerId": {
+                        "type": "integer"
+                    },
+                    "drivenPrice": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "seller": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "document"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "document": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "customer": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "phone",
+                    "type",
+                    "document",
+                    "dateCreated",
+                    "registrationAddress",
+                    "customerType"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "type": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "document": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "dateCreated": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "registrationAddress": {
+                        "type": "object",
+                        "required": [
+                            "street",
+                            "number",
+                            "quarter",
+                            "city",
+                            "state",
+                            "zipcode",
+                            "addressType"
+                        ],
+                        "properties": {
+                            "street": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "number": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "quarter": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "city": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "state": {
+                                "type": "string",
+                                "minLength": 2
+                            },
+                            "zipcode": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "addressType": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        }
+                    },
+                    "customerType": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "type",
+                                "name"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "payments": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "gateway",
+                        "paymentInstallmentsValue",
+                        "paymentInstallments",
+                        "paymentDate",
+                        "wrapper"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        },
+                        "gateway": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "paymentInstallmentsValue": {
+                            "type": "number"
+                        },
+                        "paymentInstallments": {
+                            "type": "integer"
+                        },
+                        "paymentDate": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "wrapper": {
+                            "type": "string",
+                            "minLength": 1
+                        }
+                    }
+                }
+            },
+            "discounts": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "type",
+                        "value",
+                        "valueFormats"
+                    ],
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "value": {
+                            "type": "number"
+                        },
+                        "valueFormats": {
+                            "type": "object",
+                            "required": [
+                                "value",
+                                "mask"
+                            ],
+                            "properties": {
+                                "value": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "mask": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "paymentDateVpvf": {
+                "type": "string",
+                "minLength": 1
+            },
+            "deliveries": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "ownCarrier",
+                        "address",
+                        "freight",
+                        "products"
+                    ],
+                    "properties": {
+                        "ownCarrier": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "address": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "street",
+                                "number",
+                                "quarter",
+                                "city",
+                                "state",
+                                "zipcode",
+                                "addressType"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "street": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "number": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "quarter": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "city": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "state": {
+                                    "type": "string",
+                                    "minLength": 2
+                                },
+                                "zipcode": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "addressType": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            }
+                        },
+                        "freight": {
+                            "type": "object",
+                            "required": [
+                                "value",
+                                "valueFormats",
+                                "name",
+                                "type",
+                                "deliveryScheduleInitialDate",
+                                "deliveryScheduleFinalDate",
+                                "realValue",
+                                "realValueFormats",
+                                "realName",
+                                "realType"
+                            ],
+                            "properties": {
+                                "value": {
+                                    "type": "number"
+                                },
+                                "valueFormats": {
+                                    "type": "object",
+                                    "required": [
+                                        "value",
+                                        "mask"
+                                    ],
+                                    "properties": {
+                                        "value": {
+                                            "type": "string",
+                                            "minLength": 1
+                                        },
+                                        "mask": {
+                                            "type": "string",
+                                            "minLength": 1
+                                        }
+                                    }
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "deliveryScheduleInitialDate": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "deliveryScheduleFinalDate": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "realValue": {
+                                    "type": "number"
+                                },
+                                "realValueFormats": {
+                                    "type": "object",
+                                    "required": [
+                                        "value",
+                                        "mask"
+                                    ],
+                                    "properties": {
+                                        "value": {
+                                            "type": "string",
+                                            "minLength": 1
+                                        },
+                                        "mask": {
+                                            "type": "string",
+                                            "minLength": 1
+                                        }
+                                    }
+                                },
+                                "realName": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "realType": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            }
+                        },
+                        "products": {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "mfrPartCode",
+                                    "composition",
+                                    "virtualQuantity",
+                                    "realQuantity",
+                                    "quantity",
+                                    "price",
+                                    "priceFormats",
+                                    "leadTime",
+                                    "partnerOrderLineId",
+                                    "isLeadTimeByRequest",
+                                    "stockPrice",
+                                    "stockPriceFormats",
+                                    "totalCost",
+                                    "totalCostFormats",
+                                    "netCost",
+                                    "netCostFormats",
+                                    "marginAfterDiscountPercentage",
+                                    "anticipationRate",
+                                    "realSalePrice",
+                                    "realSalePriceFormats",
+                                    "drivenPrice",
+                                    "partnerPartCode",
+                                    "contract",
+                                    "warehouse",
+                                    "brand",
+                                    "specialRules",
+                                    "needsAgronomicRecipe",
+                                    "salesUnitOfMeasurement",
+                                    "salePriceByUnitOfMeasurement",
+                                    "unitaryQuantityInSalesUnitOfMeasurement",
+                                    "totalQuantityInSalesUnitOfMeasurement",
+                                    "priceContractSkuCustomAttributes",
+                                    "whoAddedItemToCart",
+                                    "categoryId",
+                                    "categoryName"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "mfrPartCode": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "composition": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "virtualQuantity": {
+                                        "type": "integer"
+                                    },
+                                    "realQuantity": {
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "priceFormats": {
+                                        "type": "object",
+                                        "required": [
+                                            "value",
+                                            "mask"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            },
+                                            "mask": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "leadTime": {
+                                        "type": "integer"
+                                    },
+                                    "partnerOrderLineId": {
+                                        "type": "integer"
+                                    },
+                                    "isLeadTimeByRequest": {
+                                        "type": "boolean"
+                                    },
+                                    "stockPrice": {
+                                        "type": "number"
+                                    },
+                                    "stockPriceFormats": {
+                                        "type": "object",
+                                        "required": [
+                                            "value",
+                                            "mask"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            },
+                                            "mask": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "totalCost": {
+                                        "type": "number"
+                                    },
+                                    "totalCostFormats": {
+                                        "type": "object",
+                                        "required": [
+                                            "value",
+                                            "mask"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            },
+                                            "mask": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "netCost": {
+                                        "type": "number"
+                                    },
+                                    "netCostFormats": {
+                                        "type": "object",
+                                        "required": [
+                                            "value",
+                                            "mask"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            },
+                                            "mask": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "marginAfterDiscountPercentage": {
+                                        "type": "number"
+                                    },
+                                    "anticipationRate": {
+                                        "type": "number"
+                                    },
+                                    "realSalePrice": {
+                                        "type": "number"
+                                    },
+                                    "realSalePriceFormats": {
+                                        "type": "object",
+                                        "required": [
+                                            "value",
+                                            "mask"
+                                        ],
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            },
+                                            "mask": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "drivenPrice": {
+                                        "type": "boolean"
+                                    },
+                                    "partnerPartCode": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "contract": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "name"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "warehouse": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "zipcode"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            },
+                                            "zipcode": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "brand": {
+                                        "type": "object",
+                                        "required": [
+                                            "id",
+                                            "name"
+                                        ],
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "minLength": 1
+                                            }
+                                        }
+                                    },
+                                    "specialRules": {
+                                        "type": "object"
+                                    },
+                                    "needsAgronomicRecipe": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "salesUnitOfMeasurement": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "salePriceByUnitOfMeasurement": {
+                                        "type": "number"
+                                    },
+                                    "unitaryQuantityInSalesUnitOfMeasurement": {
+                                        "type": "integer"
+                                    },
+                                    "totalQuantityInSalesUnitOfMeasurement": {
+                                        "type": "integer"
+                                    },
+                                    "priceContractSkuCustomAttributes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "name",
+                                                "value"
+                                            ],
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "minLength": 1
+                                                },
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "whoAddedItemToCart": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "categoryId": {
+                                        "type": "integer"
+                                    },
+                                    "categoryName": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "partnerOrderAttributes": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "value"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "orderStatusLogs": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "status",
+                        "date"
+                    ],
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "date": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                }
+            },
+            "totalMarginAfterDiscountPercentage": {
+                "type": "number"
+            },
+            "markup": {
+                "type": "number"
+            },
+            "whoCreatedPreOrder": {
+                "type": "string",
+                "minLength": 1
+            },
+            "whoSelectedPayment": {
+                "type": "string",
+                "minLength": 1
+            }
+        }
+    }
+}

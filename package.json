@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "test:open": "cypress open",
+    "test:run": "cypress run --env allure=true",
+    "test:report": "if exist allure-results rmdir /s /q allure-results && cypress run --env allure=true & allure generate allure-results --clean -o allure-report && allure open allure-report",
+    "test:schedule": "node scripts/run-tests.js",
+    "report:serve": "http-server allure-report -p 8080 -c-1"
+  },
+  "devDependencies": {
+    "@shelex/cypress-allure-plugin": "latest",
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
+    "allure-commandline": "latest",
+    "cypress-plugin-api": "^2.11.2",
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,11 @@
+# Credenciais e dados sensíveis — NUNCA commitar
+cypress.env.json
+
+# Resultados e relatórios gerados
+allure-results/
+allure-report/
+cypress/screenshots/
+cypress/videos/
+
+# Dependências
+node_modules/

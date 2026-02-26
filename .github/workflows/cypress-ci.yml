@@ -1,0 +1,45 @@
+name: Cypress API Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 11 * * *' # Executa todo dia às 08h (Horário de Brasília - UTC-3)
+  workflow_dispatch: # Permite rodar manualmente pelo painel do GitHub
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress Tests
+        run: npm run test:run
+        continue-on-error: true # Continua para gerar o report mesmo se o teste falhar
+        env:
+          CYPRESS_AUTH_USERNAME: ${{ secrets.CYPRESS_AUTH_USERNAME }}
+          CYPRESS_AUTH_PASSWORD: ${{ secrets.CYPRESS_AUTH_PASSWORD }}
+          CYPRESS_AUTH_BASIC: ${{ secrets.CYPRESS_AUTH_BASIC }}
+
+      - name: Generate Allure Report
+        run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+
+      - name: Slack Notification
+        if: always()
+        run: node scripts/slack-notify.js ${{ job.status }} ${{ github.run_id }}
+        env:
+          CYPRESS_SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          CYPRESS_BASE_URL: https://ws.autorei.net
+          # A URL do report no GitHub Pages segue o padrão: https://<usuario>.github.io/<repositorio>/
+          REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
