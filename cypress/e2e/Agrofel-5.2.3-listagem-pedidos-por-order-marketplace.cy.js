@@ -4,7 +4,7 @@
 // variáveis de ambiente do agendador (CYPRESS_BASE_URL, etc.)
 // ============================================================
 const BASE_URL = Cypress.env('BASE_URL') || 'https://ws.autorei.net';
-const CUSTOMER_DOC = Cypress.env('CUSTOMER_DOC') || '403.961.710-01';
+const CUSTOMER_DOC = Cypress.env('CUSTOMER_DOC') || '503.961.710-01';
 const AUTH_BASIC = Cypress.env('AUTH_BASIC');
 
 // ── Overrides opcionais ──────────────────────────────────────
