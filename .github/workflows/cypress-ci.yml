@@ -10,6 +10,12 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permite que o Action crie e atualize a branch gh-pages
+    permissions:
+      contents: write
+      pages: write      # Necessário para o deploy do Pages
+      id-token: write   # Necessário para o deploy do Pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +25,7 @@ jobs:
 
       - name: Run Cypress Tests
         run: npm run test:run
-        continue-on-error: true # Continua para gerar o report mesmo se o teste falhar
+        continue-on-error: true
         env:
           CYPRESS_AUTH_USERNAME: ${{ secrets.CYPRESS_AUTH_USERNAME }}
           CYPRESS_AUTH_PASSWORD: ${{ secrets.CYPRESS_AUTH_PASSWORD }}
@@ -28,12 +34,14 @@ jobs:
       - name: Generate Allure Report
         run: npx allure generate allure-results --clean -o allure-report
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
-          publish_branch: gh-pages
+          path: ./allure-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Slack Notification
         if: always()
