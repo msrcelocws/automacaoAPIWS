@@ -17,9 +17,10 @@ async function start() {
     // Ajuste nos caminhos: Se o script está na pasta /scripts, o '..' sobe para a raiz
     const resultsDir = path.resolve(__dirname, '..', 'allure-results');
     const reportDir = path.resolve(__dirname, '..', 'allure-report');
+    const logsDir = path.resolve(__dirname, '..', 'cypress', 'logs');
 
     // 1. Limpeza Profunda (Garante que as pastas estejam VAZIAS e EXISTAM)
-    [resultsDir, reportDir].forEach(dir => {
+    [resultsDir, reportDir, logsDir].forEach(dir => {
         try {
             if (fs.existsSync(dir)) {
                 console.log(`🧹 Removendo dados antigos: ${path.basename(dir)}`);

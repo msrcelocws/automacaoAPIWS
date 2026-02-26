@@ -81,6 +81,11 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
             testLogs: [],
         };
 
+        // Garante que o estado seja salvo para o Slack, mesmo em falha
+        afterEach(() => {
+            cy.writeFile('cypress/logs/test-status.json', state);
+        });
+
         let accessToken;
         let orderId;
 

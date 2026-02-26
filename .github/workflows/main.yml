@@ -39,6 +39,7 @@ jobs:
       - name: 🧹 Preparar Ambiente e Resultados
         run: |
           mkdir -p allure-results/history
+          mkdir -p cypress/logs
           [ -d allure-history ] && cp -r allure-history/* allure-results/history/ || echo "Primeira execução: sem histórico."
 
       - name: 🌲 Executar Testes Cypress (Especialista)

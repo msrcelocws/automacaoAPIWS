@@ -26,10 +26,29 @@ if (!SLACK_WEBHOOK_URL) {
 }
 
 // 4. Construção da URL do Report (Anti-Cache Profissional)
-// Usa o ID da execução para garantir que o navegador não carregue lixo
 const finalReportUrl = `${REPORT_URL.replace(/\/$/, '')}/index.html?v=${executionId}`;
 
-// 4. Montagem do Payload do Slack
+// 5. Captura de Erro Detalhado (Especialista)
+let detailedError = '';
+try {
+    const logPath = path.resolve(__dirname, '..', 'cypress', 'logs', 'test-status.json');
+    if (fs.existsSync(logPath)) {
+        const state = JSON.parse(fs.readFileSync(logPath, 'utf8'));
+        if (!isSuccess && state.errorMessage) {
+            // Tenta parsear se for JSON (caso venha do assertSuccess)
+            try {
+                const err = JSON.parse(state.errorMessage);
+                detailedError = `\n⚠️ *LogErro:* \`${err.step}\` falhou com status \`${err.statusCode}\`\n> _Mensagem:_ ${JSON.stringify(err.responseBody)}`;
+            } catch {
+                detailedError = `\n⚠️ *LogErro:* ${state.errorMessage}`;
+            }
+        }
+    }
+} catch (err) {
+    console.warn('⚠️ Não foi possível ler o arquivo de log do Cypress.');
+}
+
+// 6. Montagem do Payload do Slack
 const message = {
     text: isSuccess ? "✅ *Testes de API concluídos com SUCESSO!*" : "❌ *Falha detectada nos Testes de API!*",
     attachments: [
@@ -40,7 +59,7 @@ const message = {
                     type: "section",
                     text: {
                         type: "mrkdwn",
-                        text: `*Cenário:* Agrofel 5.2.3 - Listagem de pedidos\n*Ambiente:* ${BASE_URL}\n*ID da Execução (GitHub Run):* \`#${executionId}\`\n*Resultado:* ${isSuccess ? 'PASSOU' : 'FALHOU'}\n*Data/Hora:* ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}\n\n_Dica: Se o relatório parecer antigo, use CTRL+F5._`
+                        text: `*Cenário:* Agrofel 5.2.3 - Listagem de pedidos\n*Ambiente:* ${BASE_URL}\n*ID da Execução:* \`#${executionId}\`\n*Resultado:* ${isSuccess ? 'PASSOU' : 'FALHOU'}${detailedError}\n*Data/Hora:* ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}\n\n_Dica: Se o relatório parecer antigo, use CTRL+F5._`
                     }
                 },
                 {
