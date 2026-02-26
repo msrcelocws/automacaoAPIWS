@@ -58,6 +58,17 @@ const assertSuccess = (response, stepLabel, state) => {
 // ============================================================
 describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
 
+    const state = {
+        success: true,
+        errorMessage: null,
+        testLogs: [],
+    };
+
+    // Garante que o estado seja salvo para o Slack, mesmo em falha
+    afterEach(() => {
+        cy.writeFile('cypress/logs/test-status.json', state);
+    });
+
     it('AGROFEL - Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', function () {
         cy.allure()
             .severity('critical')
@@ -74,17 +85,6 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
             'ID da Execução': Cypress.env('GITHUB_RUN_ID') || 'Local',
         });
 
-        // ── Estado compartilhado entre os steps ──────────────
-        const state = {
-            success: true,
-            errorMessage: null,
-            testLogs: [],
-        };
-
-        // Garante que o estado seja salvo para o Slack, mesmo em falha
-        afterEach(() => {
-            cy.writeFile('cypress/logs/test-status.json', state);
-        });
 
         let accessToken;
         let orderId;

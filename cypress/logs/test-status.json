@@ -1,0 +1,9 @@
+{
+  "success": false,
+  "errorMessage": "Nenhum pedido encontrado para o cliente 403.961.710-01.",
+  "testLogs": [
+    "[OK] Step 1 — POST /oauth/token (1180ms): HTTP 200",
+    "[OK] Step 2 — GET /partnerOrders/list/store (1837ms): HTTP 200",
+    "[ERRO] Step 2: Nenhum pedido encontrado para o cliente 403.961.710-01."
+  ]
+}
