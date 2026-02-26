@@ -3,29 +3,25 @@ const fs = require('fs');
 const path = require('path');
 
 // 1. Carregamento de Configurações
-const envPath = path.join(__dirname, '..', 'cypress.env.json');
-let cypressEnv = {};
-if (fs.existsSync(envPath)) {
-    cypressEnv = JSON.parse(fs.readFileSync(envPath, 'utf8'));
-}
-
-const SLACK_WEBHOOK_URL = process.env.CYPRESS_SLACK_WEBHOOK_URL || cypressEnv.SLACK_WEBHOOK_URL;
-const REPORT_URL = process.env.REPORT_URL || cypressEnv.REPORT_URL || 'http://localhost:8080';
-const BASE_URL = process.env.CYPRESS_BASE_URL || cypressEnv.BASE_URL || 'https://ws.autorei.net';
+// Prioriza variáveis de ambiente (Especialista CI/CD)
+const SLACK_WEBHOOK_URL = process.env.CYPRESS_SLACK_WEBHOOK_URL;
+const REPORT_URL = process.env.REPORT_URL;
+const BASE_URL = process.env.CYPRESS_BASE_URL || 'https://ws.autorei.net';
 
 // 2. Captura de Argumentos (Status e ID Único da Execução)
 const statusArg = process.argv[2] || 'unknown';
-const executionId = process.argv[3] || new Date().toISOString().replace(/[:.]/g, '-'); // Fallback caso venha vazio
+const executionId = process.argv[3] || 'local';
 const isSuccess = statusArg === '0' || statusArg === 'success';
 
+// 3. Validação de Segurança
 if (!SLACK_WEBHOOK_URL) {
-    console.error('❌ ERRO: SLACK_WEBHOOK_URL não configurado.');
-    process.exit(1);
+    console.warn('⚠️ SLACK_WEBHOOK_URL não configurado. Pulando notificação.');
+    process.exit(0);
 }
 
-// 3. Construção da URL do Report (Anti-Cache)
-// Garante que termina com barra e adiciona o parâmetro único de versão
-const finalReportUrl = `${REPORT_URL.replace(/\/$/, '')}/index.html?executionId=${executionId}`;
+// 4. Construção da URL do Report (Anti-Cache Profissional)
+// Usa o ID da execução para garantir que o navegador não carregue lixo
+const finalReportUrl = `${REPORT_URL.replace(/\/$/, '')}/index.html?v=${executionId}`;
 
 // 4. Montagem do Payload do Slack
 const message = {

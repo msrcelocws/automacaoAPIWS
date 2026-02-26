@@ -63,6 +63,7 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
             .severity('critical')
             .feature('Marketplace')
             .story('Fluxo de Pedido')
+            .link('Documentação da API', 'https://ws.autorei.net/swagger-ui.html') // Exemplo de link de doc
             .description('Autentica via OAuth, busca o último pedido do cliente e valida os atributos.');
 
         // ── Registro de Ambiente no Allure ──────────────────
@@ -95,33 +96,33 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
             });
             cy.allure().endStep();
         } else {
-            cy.allure().startStep('1. Autenticação — POST /oauth/token');
-            cy.request({
-                method: 'POST',
-                url: `${BASE_URL}/oauth/token`,
-                failOnStatusCode: false,                        // ← captura erros sem abortar
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    ...(AUTH_BASIC ? { 'Authorization': `Basic ${AUTH_BASIC}` } : {}),
-                },
-                body: new URLSearchParams({
-                    scope: 'trust', grant_type: 'password',
-                    username: AUTH.username, password: AUTH.password,
-                }).toString(),
-            }).then((authResponse) => {
-                attachJSON('Response Body — Auth', authResponse.body);
-                cy.allure().parameter('Tempo de Resposta (Step 1)', `${authResponse.duration}ms`);
-                assertSuccess(authResponse, `Step 1 — POST /oauth/token (${authResponse.duration}ms)`, state);   // lança se não 2xx
+            cy.allure().step('Step 1 — POST /oauth/token', () => {
+                cy.request({
+                    method: 'POST',
+                    url: `${BASE_URL}/oauth/token`,
+                    failOnStatusCode: false,                        // ← captura erros sem abortar
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        ...(AUTH_BASIC ? { 'Authorization': `Basic ${AUTH_BASIC}` } : {}),
+                    },
+                    body: new URLSearchParams({
+                        scope: 'trust', grant_type: 'password',
+                        username: AUTH.username, password: AUTH.password,
+                    }).toString(),
+                }).then((authResponse) => {
+                    attachJSON('Response Body — Auth', authResponse.body);
+                    cy.allure().parameter('Tempo de Resposta (Step 1)', `${authResponse.duration}ms`);
+                    assertSuccess(authResponse, `Step 1 — POST /oauth/token (${authResponse.duration}ms)`, state);   // lança se não 2xx
 
-                accessToken = authResponse.body.access_token;
-                if (!accessToken) {
-                    state.success = false;
-                    state.errorMessage = 'access_token ausente na resposta de autenticação.';
-                    state.testLogs.push(`[ERRO] Step 1: ${state.errorMessage}`);
-                    throw new Error(state.errorMessage);
-                }
+                    accessToken = authResponse.body.access_token;
+                    if (!accessToken) {
+                        state.success = false;
+                        state.errorMessage = 'access_token ausente na resposta de autenticação.';
+                        state.testLogs.push(`[ERRO] Step 1: ${state.errorMessage}`);
+                        throw new Error(state.errorMessage);
+                    }
+                });
             });
-            cy.allure().endStep();
         }
 
         // ════════════════════════════════════════════════════
@@ -136,8 +137,7 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
             });
             cy.allure().endStep();
         } else {
-            cy.allure().startStep('2. Busca do último pedido — GET /partnerOrders/list/store');
-            cy.then(() => {
+            cy.allure().step('Step 2 — GET /partnerOrders/list/store', () => {
                 cy.api({
                     method: 'GET',
                     url: `${BASE_URL}/partnerOrders/list/store?offset=0&limit=50&_t=${Date.now()}`,
@@ -172,14 +172,12 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                     state.testLogs.push(`[OK] Step 2: orderId obtido — ${orderId}.`);
                 });
             });
-            cy.allure().endStep();
         }
 
         // ════════════════════════════════════════════════════
         // STEP 3 — Validação do pedido (GET /store/order/:id)
         // ════════════════════════════════════════════════════
-        cy.allure().startStep('3. Validação do Pedido — GET /partnerOrders/store/order/:id');
-        cy.then(() => {
+        cy.allure().step('Step 3 — GET /partnerOrders/store/order/:id', () => {
             cy.allure().parameter('Order ID', orderId);
             cy.api({
                 method: 'GET',
@@ -192,7 +190,9 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                 assertSuccess(detailResponse, `Step 3 — GET /partnerOrders/store/order/${orderId} (${detailResponse.duration}ms)`, state);
 
                 // Validação de Contrato via JSON Schema
-                cy.validateSchema('Agrofel-JSONSCHEMA-5.2.3', detailResponse.body);
+                cy.allure().step('Validação de JSON Schema', () => {
+                    cy.validateSchema('Agrofel-JSONSCHEMA-5.2.3', detailResponse.body);
+                });
 
                 state.testLogs.push('[OK] Step 3: Contrato validado com sucesso.');
                 state.testLogs.push('[OK] Step 3: partnerOrderAttributes validados via Schema.');
@@ -210,7 +210,6 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                 }
             });
         });
-        cy.allure().endStep();
     });
 
 });

@@ -1,27 +1,34 @@
-name: PROD - Agrofel - 5.2.3 - Listagem de pedidos por Order - Marketplace
+name: Agrofel - CI/CD Profissional (API)
 
 on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '0 11 * * *' # Executa todo dia às 08h (Horário de Brasília - UTC-3)
-  workflow_dispatch: # Permite rodar manualmente pelo painel do GitHub
+    - cron: '0 11 * * *' # 08h Brasília
+  workflow_dispatch:
 
 jobs:
-  cypress-run:
+  qa-automation:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write      # Necessário para o deploy do Pages
-      id-token: write   # Necessário para o deploy do Pages
+      pages: write
+      id-token: write
+
     steps:
-      - name: Checkout
+      - name: 📥 Checkout Projeto
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: 🛠️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar Dependências
         run: npm install
 
-      - name: Setup Allure History
+      - name: 🕒 Recuperar Histórico Allure
         uses: actions/cache@v4
         with:
           path: allure-history
@@ -29,60 +36,57 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-allure-history-
 
-      - name: Prepare Allure Results
+      - name: 🧹 Preparar Ambiente e Resultados
         run: |
           mkdir -p allure-results/history
-          [ -d allure-history ] && cp -r allure-history/* allure-results/history/ || echo "No history found"
+          [ -d allure-history ] && cp -r allure-history/* allure-results/history/ || echo "Primeira execução: sem histórico."
 
-      - name: Run Cypress Tests
+      - name: 🌲 Executar Testes Cypress (Especialista)
         run: npm run test:run
         continue-on-error: true
         env:
+          # Injeção de Secrets (Segurança Total)
           CYPRESS_AUTH_USERNAME: ${{ secrets.CYPRESS_AUTH_USERNAME }}
           CYPRESS_AUTH_PASSWORD: ${{ secrets.CYPRESS_AUTH_PASSWORD }}
           CYPRESS_AUTH_BASIC: ${{ secrets.CYPRESS_AUTH_BASIC }}
+          CYPRESS_BASE_URL: https://ws.autorei.net
           GITHUB_RUN_ID: ${{ github.run_id }}
 
-      - name: Generate Allure Report
+      - name: 📊 Gerar Allure Report Profissional
         run: npx allure generate allure-results --clean -o allure-report
 
-      - name: Customize Allure UI
+      - name: 🎨 Customizar Interface Allure
         run: |
-          # 1. Esconde abas indesejadas via CSS
+          # Remove abas não utilizadas e renomeia Overview
           echo '
-          .side-nav__brand { background: #007bff !important; } 
           .side-nav__item[data-tooltip="Graphs"],
           .side-nav__item[data-tooltip="Timeline"],
-          .side-nav__item[data-tooltip="Behaviors"],
-          .side-nav__item[data-tooltip="Packages"] { display: none !important; }
+          .side-nav__item[data-tooltip="Behaviors"] { display: none !important; }
+          .side-nav__brand { background: #007bff !important; }
           ' >> allure-report/styles.css
-          
-          # 2. Renomeia "Overview" para "HISTÓRICO" via JS (injetando no index.html)
           sed -i 's/<\/body>/<script>setTimeout(() => { document.querySelectorAll(".side-nav__item[data-tooltip=\"Overview\"] .side-nav__label").forEach(el => el.innerText = "HISTÓRICO") }, 1000)<\/script><\/body>/' allure-report/index.html
 
-      - name: Update Allure History
+      - name: 💾 Salvar Novo Histórico
         run: |
           mkdir -p allure-history
           cp -r allure-report/history/* allure-history/
 
-      - name: Upload Pages Artifact
+      - name: 🚀 Publicar no GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./allure-report
 
-      - name: Deploy to GitHub Pages
+      - name: 🌐 Deploy
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Wait for propagation
-        if: always()
-        run: sleep 35 # Aumentado para 35s para garantir que o CDN do GitHub propague os arquivos
+      - name: ⏳ Wait for propagation
+        run: sleep 35
 
-      - name: Slack Notification
+      - name: 🔔 Notificação Inteligente (Slack)
         if: always()
         run: node scripts/slack-notify.js ${{ job.status }} ${{ github.run_id }}
         env:
           CYPRESS_SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           CYPRESS_BASE_URL: https://ws.autorei.net
-          # A URL do report no GitHub Pages segue o padrão: https://<usuario>.github.io/<repositorio>/
           REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/

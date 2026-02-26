@@ -23,13 +23,13 @@ async function start() {
         try {
             if (fs.existsSync(dir)) {
                 console.log(`🧹 Removendo dados antigos: ${path.basename(dir)}`);
+                // Força a remoção recursiva para limpar tudo
                 fs.rmSync(dir, { recursive: true, force: true });
             }
-            // CRÍTICO: Recria a pasta SEMPRE, garantindo que o Cypress tenha onde gravar
+            // Recria a pasta limpa
             fs.mkdirSync(dir, { recursive: true });
-            console.log(`📂 Pasta preparada: ${path.basename(dir)}`);
         } catch (err) {
-            console.warn(`⚠️ Aviso em ${path.basename(dir)}: ${err.message}`);
+            console.warn(`⚠️ Erro ao limpar ${path.basename(dir)}: ${err.message}`);
         }
     });
 
