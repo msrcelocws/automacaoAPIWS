@@ -65,6 +65,14 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
             .story('Fluxo de Pedido')
             .description('Autentica via OAuth, busca o último pedido do cliente e valida os atributos.');
 
+        // ── Registro de Ambiente no Allure ──────────────────
+        const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        cy.allure().writeEnvironmentData({
+            'Data/Hora (Brasília)': now,
+            'Ambiente': BASE_URL,
+            'ID da Execução': Cypress.env('GITHUB_RUN_ID') || 'Local',
+        });
+
         // ── Estado compartilhado entre os steps ──────────────
         const state = {
             success: true,
@@ -102,7 +110,8 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                 }).toString(),
             }).then((authResponse) => {
                 attachJSON('Response Body — Auth', authResponse.body);
-                assertSuccess(authResponse, 'Step 1 — POST /oauth/token', state);   // lança se não 2xx
+                cy.allure().parameter('Tempo de Resposta (Step 1)', `${authResponse.duration}ms`);
+                assertSuccess(authResponse, `Step 1 — POST /oauth/token (${authResponse.duration}ms)`, state);   // lança se não 2xx
 
                 accessToken = authResponse.body.access_token;
                 if (!accessToken) {
@@ -136,7 +145,8 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                     headers: { 'Authorization': `Bearer ${accessToken}` },
                 }).then((listResponse) => {
                     attachJSON('Response Body — Listagem', listResponse.body);
-                    assertSuccess(listResponse, 'Step 2 — GET /partnerOrders/list/store', state);
+                    cy.allure().parameter('Tempo de Resposta (Step 2)', `${listResponse.duration}ms`);
+                    assertSuccess(listResponse, `Step 2 — GET /partnerOrders/list/store (${listResponse.duration}ms)`, state);
 
                     const orders = listResponse.body;
                     const filtered = orders
@@ -178,7 +188,8 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                 headers: { 'Authorization': `Bearer ${accessToken}` },
             }).then((detailResponse) => {
                 attachJSON('Response Body — Detalhe do Pedido', detailResponse.body);
-                assertSuccess(detailResponse, `Step 3 — GET /partnerOrders/store/order/${orderId}`, state);
+                cy.allure().parameter('Tempo de Resposta (Step 3)', `${detailResponse.duration}ms`);
+                assertSuccess(detailResponse, `Step 3 — GET /partnerOrders/store/order/${orderId} (${detailResponse.duration}ms)`, state);
 
                 // Validação de Contrato via JSON Schema
                 cy.validateSchema('Agrofel-JSONSCHEMA-5.2.3', detailResponse.body);

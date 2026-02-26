@@ -21,6 +21,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Setup Allure History
+        uses: actions/cache@v4
+        with:
+          path: allure-history
+          key: ${{ runner.os }}-allure-history-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-allure-history-
+
+      - name: Prepare Allure Results
+        run: |
+          mkdir -p allure-results/history
+          [ -d allure-history ] && cp -r allure-history/* allure-results/history/ || echo "No history found"
+
       - name: Run Cypress Tests
         run: npm run test:run
         continue-on-error: true
@@ -28,9 +41,15 @@ jobs:
           CYPRESS_AUTH_USERNAME: ${{ secrets.CYPRESS_AUTH_USERNAME }}
           CYPRESS_AUTH_PASSWORD: ${{ secrets.CYPRESS_AUTH_PASSWORD }}
           CYPRESS_AUTH_BASIC: ${{ secrets.CYPRESS_AUTH_BASIC }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
 
       - name: Generate Allure Report
         run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Update Allure History
+        run: |
+          mkdir -p allure-history
+          cp -r allure-report/history/* allure-history/
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
