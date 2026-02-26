@@ -9,9 +9,15 @@ const REPORT_URL = process.env.REPORT_URL;
 const BASE_URL = process.env.CYPRESS_BASE_URL || 'https://ws.autorei.net';
 
 // 2. Captura de Argumentos (Status e ID Único da Execução)
-const statusArg = process.argv[2] || 'unknown';
+const statusArg = (process.argv[2] || 'unknown').toLowerCase();
 const executionId = process.argv[3] || 'local';
-const isSuccess = statusArg === '0' || statusArg === 'success';
+
+// 3. Lógica de Sucesso (Especialista)
+// '0' = Sucesso local (Cypress)
+// 'success' ou 'passed' = Sucesso no GitHub Actions
+const isSuccess = statusArg === '0' || statusArg === 'success' || statusArg === 'passed';
+
+console.log(`🔍 Status recebido: "${statusArg}" | Resultado final: ${isSuccess ? 'SUCESSO' : 'FALHA'}`);
 
 // 3. Validação de Segurança
 if (!SLACK_WEBHOOK_URL) {

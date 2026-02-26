@@ -42,6 +42,7 @@ jobs:
           [ -d allure-history ] && cp -r allure-history/* allure-results/history/ || echo "Primeira execução: sem histórico."
 
       - name: 🌲 Executar Testes Cypress (Especialista)
+        id: cypress-run
         run: npm run test:run
         continue-on-error: true
         env:
@@ -85,7 +86,7 @@ jobs:
 
       - name: 🔔 Notificação Inteligente (Slack)
         if: always()
-        run: node scripts/slack-notify.js ${{ job.status }} ${{ github.run_id }}
+        run: node scripts/slack-notify.js ${{ steps.cypress-run.outcome }} ${{ github.run_id }}
         env:
           CYPRESS_SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           CYPRESS_BASE_URL: https://ws.autorei.net
