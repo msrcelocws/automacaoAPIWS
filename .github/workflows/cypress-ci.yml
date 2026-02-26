@@ -11,8 +11,6 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Permite que o Action crie e atualize a branch gh-pages
-    permissions:
       contents: write
       pages: write      # Necessário para o deploy do Pages
       id-token: write   # Necessário para o deploy do Pages
