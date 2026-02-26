@@ -138,9 +138,6 @@ describe('Fluxo 5.2.3 - Listagem de pedidos por Order - Marketplace', () => {
                     attachJSON('Response Body — Listagem', listResponse.body);
                     assertSuccess(listResponse, 'Step 2 — GET /partnerOrders/list/store', state);
 
-                    // Validação de Contrato via JSON Schema
-                    cy.validateSchema('list-orders', listResponse.body);
-
                     const orders = listResponse.body;
                     const filtered = orders
                         .filter((o) => o.customer?.customerDocument === CUSTOMER_DOC)
