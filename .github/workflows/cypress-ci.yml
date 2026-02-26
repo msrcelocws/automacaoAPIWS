@@ -46,6 +46,20 @@ jobs:
       - name: Generate Allure Report
         run: npx allure generate allure-results --clean -o allure-report
 
+      - name: Customize Allure UI
+        run: |
+          # 1. Esconde abas indesejadas via CSS
+          echo '
+          .side-nav__brand { background: #007bff !important; } 
+          .side-nav__item[data-tooltip="Graphs"],
+          .side-nav__item[data-tooltip="Timeline"],
+          .side-nav__item[data-tooltip="Behaviors"],
+          .side-nav__item[data-tooltip="Packages"] { display: none !important; }
+          ' >> allure-report/styles.css
+          
+          # 2. Renomeia "Overview" para "HISTÓRICO" via JS (injetando no index.html)
+          sed -i 's/<\/body>/<script>setTimeout(() => { document.querySelectorAll(".side-nav__item[data-tooltip=\"Overview\"] .side-nav__label").forEach(el => el.innerText = "HISTÓRICO") }, 1000)<\/script><\/body>/' allure-report/index.html
+
       - name: Update Allure History
         run: |
           mkdir -p allure-history
