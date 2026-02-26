@@ -38,7 +38,7 @@ const message = {
                     type: "section",
                     text: {
                         type: "mrkdwn",
-                        text: `*Cenário:* Agrofel 5.2.3 - Listagem de pedidos\n*Ambiente:* ${BASE_URL}\n*ID da Execução (GitHub Run):* \`#${executionId}\`\n*Resultado:* ${isSuccess ? 'PASSOU' : 'FALHOU'}\n*Data/Hora:* ${new Date().toLocaleString('pt-BR')}\n\n_Dica: Se o relatório parecer antigo, use CTRL+F5._`
+                        text: `*Cenário:* Agrofel 5.2.3 - Listagem de pedidos\n*Ambiente:* ${BASE_URL}\n*ID da Execução (GitHub Run):* \`#${executionId}\`\n*Resultado:* ${isSuccess ? 'PASSOU' : 'FALHOU'}\n*Data/Hora:* ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}\n\n_Dica: Se o relatório parecer antigo, use CTRL+F5._`
                     }
                 },
                 {
