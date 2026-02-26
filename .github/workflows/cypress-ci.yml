@@ -62,7 +62,7 @@ jobs:
 
       - name: Wait for propagation
         if: always()
-        run: sleep 20 # Aguarda o CDN do GitHub atualizar o cache
+        run: sleep 35 # Aumentado para 35s para garantir que o CDN do GitHub propague os arquivos
 
       - name: Slack Notification
         if: always()
